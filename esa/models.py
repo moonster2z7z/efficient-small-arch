@@ -134,7 +134,55 @@ class EMABank(nn.Module):
         return self.o(h)
 
 
-MIXERS = {'attn': Attn, 'gru': GRUScan, 'ema': EMABank}
+class _DeltaDir(nn.Module):
+    def __init__(self, d, H, dk, dv):
+        super().__init__()
+        self.H, self.dk, self.dv = H, dk, dv
+        self.kq = nn.Linear(d, 2 * H * dk, bias=False)
+        self.v = nn.Linear(d, H * dv, bias=False)
+        self.g = nn.Linear(d, 2 * H)
+
+    def forward(self, x, mask):
+        B, T, _ = x.shape
+        H, dk, dv = self.H, self.dk, self.dv
+        k, q = self.kq(x).view(B, T, 2, H, dk).unbind(2)
+        k = F.normalize(k, dim=-1)
+        v = self.v(x).view(B, T, H, dv)
+        g = self.g(x).view(B, T, H, 2)
+        al = torch.sigmoid(g[..., 0] + 4.0)
+        be = torch.sigmoid(g[..., 1])
+        if mask is not None:
+            m = mask[:, :, None].to(x.dtype)
+            v = v * m[..., None]; be = be * m; al = al * m + (1 - m)
+        f = lambda z: z.transpose(1, 2).reshape(B * H, T, *z.shape[3:])
+        o = FS.delta_memory(f(k), f(q), f(v), f(al), f(be))
+        return o.view(B, H, T, dv).transpose(1, 2).reshape(B, T, H * dv)
+
+
+class Delta(nn.Module):
+    """Fast-weight associative memory updated by a delta rule at every step (RWKV-7 / DeltaNet family).
+    The memory is a small matrix per head; reading is one matrix-vector product, so cost is linear in T."""
+
+    def __init__(self, d, cfg):
+        super().__init__()
+        H, dk = cfg.get('heads', 4), cfg.get('dk', 16)
+        dv = cfg.get('dv', d // H)
+        self.bi = cfg.get('bi', True)
+        self.f = _DeltaDir(d, H, dk, dv)
+        self.b = _DeltaDir(d, H, dk, dv) if self.bi else None
+        self.o = nn.Linear(H * dv * (2 if self.bi else 1), d, bias=False)
+
+    def forward(self, x, mask, causal):
+        h = self.f(x, mask)
+        if self.bi and not causal:
+            hb = self.b(x.flip(1), None if mask is None else mask.flip(1)).flip(1)
+            h = torch.cat([h, hb], -1)
+        elif self.bi:
+            h = torch.cat([h, torch.zeros_like(h)], -1)
+        return self.o(h)
+
+
+MIXERS = {'attn': Attn, 'gru': GRUScan, 'ema': EMABank, 'delta': Delta}
 
 
 class Block(nn.Module):

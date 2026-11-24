@@ -36,14 +36,18 @@ TASK_ID = {t: k for k, t in enumerate(D.TASKS)}
 MODEL_SPACE = {
     'attn': lambda r: dict(mixer='attn', pos=str(r.choice(['learned', 'rope'])), heads=4),
     'gru': lambda r: dict(mixer='gru', pos=str(r.choice(['learned', 'none'])), expand=float(r.choice([1.0, 2.0]))),
+    'delta': lambda r: dict(mixer='delta', pos=str(r.choice(['learned', 'none'])), heads=4, dk=int(r.choice([8, 16, 32]))),
     'ema': lambda r: dict(mixer='ema', pos=str(r.choice(['learned', 'none'])), expand=float(r.choice([1.0, 2.0, 4.0])),
                           tau_max=float(r.choice([64.0, 256.0, 1024.0]))),
 }
 
 
+MODEL_ORDER = ['attn', 'ema', 'gru', 'delta']  # fixed order keeps earlier draws reproducible
+
+
 def make_cfg(task, model, i):
     c, r = shared_space(task, i)
-    rm = np.random.default_rng(TASK_ID[task] * 1000 + i + 7919 * (sorted(MODEL_SPACE).index(model) + 1))
+    rm = np.random.default_rng(TASK_ID[task] * 1000 + i + 7919 * (MODEL_ORDER.index(model) + 1))
     c.update(MODEL_SPACE[model](rm))
     while count_params(task, c) > PARAM_CAP:  # enforce the shared parameter cap
         if c['layers'] > 2: c['layers'] -= 1

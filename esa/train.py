@@ -142,6 +142,9 @@ def run(job):
     rng = np.random.default_rng(seed)
     cfg = dict(job['cfg'])
     task = D.load(job['task'], job.get('frac', 1.0), seed, test_cap=int(job.get('test_cap', 5000)), val_cap=int(job.get('val_cap', 2000)))
+    if job['model'] == 'cm':  # count-based model, no gradient training
+        from . import cm
+        return cm.run(job, task, rss_mb)
     cfg.setdefault('bi', task.kind != 'lm')
     budget = float(job['budget'])
     rss0 = rss_mb()
