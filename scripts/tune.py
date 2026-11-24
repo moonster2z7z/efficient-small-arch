@@ -16,6 +16,8 @@ PARAM_CAP = 1_000_000
 
 def shared_space(task, i):
     r = np.random.default_rng(TASK_ID[task] * 1000 + i)
+    if i >= 4:  # round 2: smaller, faster models and strided token patching (round 1 showed step-starved runs)
+        return shared_space2(task, r)
     c = dict(d=int(r.choice([64, 96, 128, 192])), layers=int(r.choice([2, 3, 4, 6])),
              lr=float(np.round(np.exp(r.uniform(np.log(5e-4), np.log(4e-3))), 5)), mlp=int(r.choice([2, 4])))
     if task == 'text':
@@ -28,6 +30,22 @@ def shared_space(task, i):
         c.update(max_len=900, bs=int(r.choice([16, 32])))
     else:
         c.update(max_len=1024, bs=int(r.choice([16, 32])))
+    return c, r
+
+
+def shared_space2(task, r):
+    c = dict(d=int(r.choice([48, 64, 96, 128])), layers=int(r.choice([1, 2, 3, 4])),
+             lr=float(np.round(np.exp(r.uniform(np.log(7e-4), np.log(3e-3))), 5)), mlp=int(r.choice([2, 4])))
+    if task == 'text':
+        c.update(ctx=int(r.choice([64, 128, 256])), bs=int(r.choice([32, 64])))
+    elif task == 'cifar10':
+        c.update(patch=int(r.choice([4, 8])), bs=int(r.choice([64, 128])))
+    elif task == 'imdb':
+        c.update(max_len=int(r.choice([1024, 2048, 4096])), bs=int(r.choice([16, 32])), stem=int(r.choice([4, 8, 16])))
+    elif task == 'listops':
+        c.update(max_len=900, bs=int(r.choice([16, 32])), stem=int(r.choice([1, 2, 4])))
+    else:
+        c.update(max_len=1024, bs=int(r.choice([16, 32])), stem=int(r.choice([1, 4, 8])))
     return c, r
 
 
