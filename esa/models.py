@@ -220,10 +220,14 @@ class Net(nn.Module):
         self.cfg, self.kind, self.input = cfg, task.kind, task.input
         self.max_len = cfg.get('max_len', cfg.get('ctx', 4096))
         if task.input == 'tokens':
-            self.emb = nn.Embedding(task.vocab, d)
             self.stem = int(cfg.get('stem', 1)) if task.kind == 'cls' else 1
-            if self.stem > 1:  # strided patching of the token sequence (the 1-D analogue of image patches)
+            self.e = int(cfg.get('emb', 0)) if self.stem > 1 else 0
+            self.emb = nn.Embedding(task.vocab, self.e or d)
+            if self.e:  # cheap patching: small per-token embedding, concatenate `stem` tokens, one linear map
+                self.down = nn.Linear(self.stem * self.e, d)
+            elif self.stem > 1:  # strided patching of the token sequence (the 1-D analogue of image patches)
                 self.down = nn.Conv1d(d, d, self.stem, stride=self.stem)
+            self.max_len = -(-self.max_len // self.stem)
         else:
             self.p = cfg.get('patch', 4)
             self.emb = nn.Linear(3 * self.p * self.p, d)
@@ -256,7 +260,10 @@ class Net(nn.Module):
             pad = (-h.shape[1]) % s
             if pad:
                 h = F.pad(h, (0, 0, 0, pad))
-            h = self.down(h.transpose(1, 2)).transpose(1, 2)
+            if self.e:
+                h = self.down(h.reshape(h.shape[0], h.shape[1] // s, s * self.e))
+            else:
+                h = self.down(h.transpose(1, 2)).transpose(1, 2)
             if lengths is not None:
                 lengths = (lengths + s - 1) // s
         B, T, _ = h.shape

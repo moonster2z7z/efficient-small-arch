@@ -16,6 +16,8 @@ PARAM_CAP = 1_000_000
 
 def shared_space(task, i):
     r = np.random.default_rng(TASK_ID[task] * 1000 + i)
+    if i >= 8:  # round 3: cheap token patching (emb) for everyone, search narrowed to the fast region found in round 2
+        return shared_space3(task, r)
     if i >= 4:  # round 2: smaller, faster models and strided token patching (round 1 showed step-starved runs)
         return shared_space2(task, r)
     c = dict(d=int(r.choice([64, 96, 128, 192])), layers=int(r.choice([2, 3, 4, 6])),
@@ -49,18 +51,38 @@ def shared_space2(task, r):
     return c, r
 
 
+def shared_space3(task, r):
+    c = dict(d=int(r.choice([48, 64, 96])), layers=int(r.choice([1, 2, 3])),
+             lr=float(np.round(np.exp(r.uniform(np.log(1e-3), np.log(3e-3))), 5)), mlp=int(r.choice([2, 4])))
+    if task == 'text':
+        c.update(d=int(r.choice([96, 128])), layers=int(r.choice([2, 3, 4])), mlp=2, ctx=128, bs=int(r.choice([32, 64])),
+                 lr=float(np.round(np.exp(r.uniform(np.log(1.5e-3), np.log(4e-3))), 5)))
+    elif task == 'cifar10':
+        c.update(patch=int(r.choice([4, 8])), bs=64)
+    elif task == 'imdb':
+        c.update(max_len=int(r.choice([2048, 4096])), bs=32, stem=int(r.choice([4, 8, 16])), emb=int(r.choice([8, 16])))
+    elif task == 'listops':
+        c.update(max_len=900, bs=32, stem=int(r.choice([2, 4])), emb=int(r.choice([8, 16])))
+    else:
+        c.update(max_len=1024, bs=32, stem=int(r.choice([4, 8])), emb=int(r.choice([8, 16])))
+    return c, r
+
+
 TASK_ID = {t: k for k, t in enumerate(D.TASKS)}
 
 MODEL_SPACE = {
     'attn': lambda r: dict(mixer='attn', pos=str(r.choice(['learned', 'rope'])), heads=4),
     'gru': lambda r: dict(mixer='gru', pos=str(r.choice(['learned', 'none'])), expand=float(r.choice([1.0, 2.0]))),
+    # tgru: gru whose gates start at log-spaced time constants (time-cell prior); added for round 3
+    'tgru': lambda r: dict(mixer='gru', pos=str(r.choice(['learned', 'none'])), expand=float(r.choice([1.0, 2.0])),
+                           tau_max=float(r.choice([64.0, 256.0, 1024.0]))),
     'delta': lambda r: dict(mixer='delta', pos=str(r.choice(['learned', 'none'])), heads=4, dk=int(r.choice([8, 16, 32]))),
     'ema': lambda r: dict(mixer='ema', pos=str(r.choice(['learned', 'none'])), expand=float(r.choice([1.0, 2.0, 4.0])),
                           tau_max=float(r.choice([64.0, 256.0, 1024.0]))),
 }
 
 
-MODEL_ORDER = ['attn', 'ema', 'gru', 'delta']  # fixed order keeps earlier draws reproducible
+MODEL_ORDER = ['attn', 'ema', 'gru', 'delta', 'tgru']  # fixed order keeps earlier draws reproducible
 
 
 def make_cfg(task, model, i):
@@ -92,6 +114,7 @@ def main():
     ap.add_argument('--budget', type=float, default=300)
     ap.add_argument('--trials', type=int, default=8)
     ap.add_argument('--first', type=int, default=0)
+    ap.add_argument('--val-cap', type=int, default=1000)
     ap.add_argument('--log', default=os.path.join(ROOT, 'logs', 'tune.jsonl'))
     a = ap.parse_args()
     jobs = []
@@ -99,7 +122,7 @@ def main():
         for task in a.tasks.split(','):
             for model in a.models.split(','):
                 jobs.append(dict(task=task, model=model, cfg=make_cfg(task, model, i), seed=0, frac=1.0,
-                                 budget=a.budget, n_evals=2, val_cap=1000, test_cap=1000, trial=i))
+                                 budget=a.budget, n_evals=2, val_cap=a.val_cap, test_cap=1000, trial=i))
     res = run_jobs(jobs, a.log)
     summarize(a.log, a.budget)
 
