@@ -1,0 +1,144 @@
+[
+ {
+  "tag": "gru-tau",
+  "task": "text",
+  "model": "gru",
+  "cfg": {
+   "mixer": "gru",
+   "d": 96,
+   "layers": 4,
+   "lr": 0.00361,
+   "mlp": 2,
+   "ctx": 128,
+   "bs": 64,
+   "pos": "learned",
+   "expand": 1.0,
+   "tau_max": 64.0
+  }
+ },
+ {
+  "tag": "gru-tau",
+  "task": "imdb",
+  "model": "gru",
+  "cfg": {
+   "mixer": "gru",
+   "d": 48,
+   "layers": 2,
+   "lr": 0.00188,
+   "mlp": 2,
+   "max_len": 2048,
+   "bs": 32,
+   "stem": 4,
+   "pos": "learned",
+   "expand": 1.0,
+   "tau_max": 1024.0
+  }
+ },
+ {
+  "tag": "gru-tau",
+  "task": "cifar10",
+  "model": "gru",
+  "cfg": {
+   "mixer": "gru",
+   "d": 64,
+   "layers": 1,
+   "lr": 0.00271,
+   "mlp": 4,
+   "patch": 4,
+   "bs": 64,
+   "pos": "none",
+   "expand": 1.0,
+   "tau_max": 64.0
+  }
+ },
+ {
+  "tag": "gru-tau",
+  "task": "pathfinder",
+  "model": "gru",
+  "cfg": {
+   "mixer": "gru",
+   "d": 48,
+   "layers": 1,
+   "lr": 0.00108,
+   "mlp": 2,
+   "max_len": 1024,
+   "bs": 32,
+   "stem": 8,
+   "pos": "none",
+   "expand": 1.0,
+   "tau_max": 64.0
+  }
+ },
+ {
+  "tag": "gru-tau",
+  "task": "listops",
+  "model": "gru",
+  "cfg": {
+   "mixer": "gru",
+   "d": 96,
+   "layers": 3,
+   "lr": 0.00107,
+   "mlp": 4,
+   "max_len": 900,
+   "bs": 32,
+   "stem": 4,
+   "pos": "learned",
+   "expand": 1.0,
+   "tau_max": 64.0
+  }
+ },
+ {
+  "tag": "gru-notau",
+  "task": "imdb",
+  "model": "gru",
+  "cfg": {
+   "mixer": "gru",
+   "d": 48,
+   "layers": 2,
+   "lr": 0.00188,
+   "mlp": 2,
+   "max_len": 2048,
+   "bs": 32,
+   "stem": 4,
+   "pos": "learned",
+   "expand": 1.0
+  }
+ },
+ {
+  "tag": "seed1",
+  "seed": 1,
+  "task": "imdb",
+  "model": "ema",
+  "cfg": {
+   "mixer": "ema",
+   "d": 48,
+   "layers": 2,
+   "lr": 0.00188,
+   "mlp": 2,
+   "max_len": 2048,
+   "bs": 32,
+   "stem": 4,
+   "pos": "learned",
+   "expand": 1.0,
+   "tau_max": 1024.0
+  }
+ },
+ {
+  "tag": "seed1",
+  "seed": 1,
+  "task": "pathfinder",
+  "model": "attn",
+  "cfg": {
+   "mixer": "attn",
+   "d": 48,
+   "layers": 1,
+   "lr": 0.00108,
+   "mlp": 2,
+   "max_len": 1024,
+   "bs": 32,
+   "stem": 8,
+   "pos": "learned",
+   "heads": 4
+  }
+ }
+]

@@ -85,6 +85,15 @@ class GRUScan(nn.Module):
         self.b = nn.Linear(d, 2 * self.m) if self.bi else None
         self.o = nn.Linear(self.m * (2 if self.bi else 1), d, bias=False)
         nn.init.constant_(self.f.bias[:self.m], -1.0)  # start with slow forgetting
+        tmax = cfg.get('tau_max')
+        if tmax:  # time-cell prior: gates start at log-spaced time constants 1..tau_max (as in the EMA bank)
+            tau = torch.exp(torch.linspace(0, math.log(tmax), self.m))
+            tau = tau[torch.randperm(self.m, generator=torch.Generator().manual_seed(0))]
+            z0 = (1.0 / tau).clamp(max=0.95)
+            for lin in (self.f, self.b):
+                if lin is not None:
+                    with torch.no_grad():
+                        lin.bias[:self.m].copy_(torch.log(z0 / (1 - z0)))
 
     def _run(self, lin, x, mask):
         z, c = lin(x).chunk(2, -1)
