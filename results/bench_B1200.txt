@@ -1,0 +1,34 @@
+[  1232s] text       gru          seed=2 frac=0.1 budget=1200.0 -> ok val=1.15642 test=1.16314 params=233440 steps=7037 ep=28.824 {"d": 96, "layers": 3, "lr": 0.00352, "mlp": 2, "ctx": 128, "bs": 64, "mixer": "gru", "pos": "learned", "expand": 1.0, "tau_max": 256.0}
+[  1233s] text       gru          seed=2 frac=1.0 budget=1200.0 -> ok val=1.08228 test=1.09276 params=233440 steps=6987 ep=2.862 {"d": 96, "layers": 3, "lr": 0.00352, "mlp": 2, "ctx": 128, "bs": 64, "mixer": "gru", "pos": "learned", "expand": 1.0, "tau_max": 256.0}
+[  1242s] text       attn         seed=2 frac=0.1 budget=1200.0 -> ok val=1.25419 test=1.26583 params=173824 steps=11801 ep=24.168 {"d": 96, "layers": 2, "lr": 0.00263, "mlp": 2, "ctx": 128, "bs": 32, "mixer": "attn", "pos": "rope", "heads": 4}
+[  1244s] text       attn         seed=2 frac=1.0 budget=1200.0 -> ok val=1.21732 test=1.22451 params=173824 steps=11797 ep=2.416 {"d": 96, "layers": 2, "lr": 0.00263, "mlp": 2, "ctx": 128, "bs": 32, "mixer": "attn", "pos": "rope", "heads": 4}
+[  2443s] cifar10    gru          seed=2 frac=1.0 budget=1200.0 -> ok val=0.752 test=0.7432 params=29578 steps=65249 ep=92.683 {"d": 48, "layers": 1, "lr": 0.00186, "mlp": 2, "patch": 4, "bs": 64, "mixer": "gru", "pos": "learned", "expand": 1.0, "tau_max": 64.0}
+[  2443s] cifar10    attn         seed=2 frac=1.0 budget=1200.0 -> ok val=0.737 test=0.7472 params=94858 steps=68467 ep=97.253 {"d": 48, "layers": 3, "lr": 0.00109, "mlp": 4, "patch": 8, "bs": 64, "mixer": "attn", "pos": "learned", "heads": 4}
+[  2453s] cifar10    attn         seed=2 frac=0.1 budget=1200.0 -> ok val=0.518 test=0.5204 params=94858 steps=68899 ep=970.412 {"d": 48, "layers": 3, "lr": 0.00109, "mlp": 4, "patch": 8, "bs": 64, "mixer": "attn", "pos": "learned", "heads": 4}
+[  2457s] cifar10    gru          seed=2 frac=0.1 budget=1200.0 -> ok val=0.576 test=0.5754 params=29578 steps=65139 ep=917.455 {"d": 48, "layers": 1, "lr": 0.00186, "mlp": 2, "patch": 4, "bs": 64, "mixer": "gru", "pos": "learned", "expand": 1.0, "tau_max": 64.0}
+[  3701s] listops    attn         seed=2 frac=1.0 budget=1200.0 -> ok val=0.2965 test=0.2935 params=395722 steps=3050 ep=1.017 {"d": 96, "layers": 3, "lr": 0.00107, "mlp": 4, "max_len": 900, "bs": 32, "stem": 4, "mixer": "attn", "pos": "learned", "heads": 4}
+[  3703s] listops    gru          seed=2 frac=1.0 budget=1200.0 -> ok val=0.306 test=0.295 params=452170 steps=3864 ep=1.288 {"d": 96, "layers": 3, "lr": 0.00107, "mlp": 4, "max_len": 900, "bs": 32, "stem": 4, "mixer": "gru", "pos": "learned", "expand": 1.0}
+[  3710s] listops    attn         seed=2 frac=0.1 budget=1200.0 -> ok val=0.3005 test=0.283 params=395722 steps=3311 ep=11.037 {"d": 96, "layers": 3, "lr": 0.00107, "mlp": 4, "max_len": 900, "bs": 32, "stem": 4, "mixer": "attn", "pos": "learned", "heads": 4}
+[  3720s] listops    gru          seed=2 frac=0.1 budget=1200.0 -> ok val=0.306 test=0.296 params=452170 steps=3898 ep=12.993 {"d": 96, "layers": 3, "lr": 0.00107, "mlp": 4, "max_len": 900, "bs": 32, "stem": 4, "mixer": "gru", "pos": "learned", "expand": 1.0}
+[  4919s] pathfinder attn         seed=2 frac=1.0 budget=1200.0 -> ok val=0.942 test=0.9474 params=55922 steps=29434 ep=5.887 {"d": 48, "layers": 1, "lr": 0.00108, "mlp": 2, "max_len": 1024, "bs": 32, "stem": 8, "mixer": "attn", "pos": "learned", "heads": 4}
+[  4919s] pathfinder gru          seed=2 frac=1.0 budget=1200.0 -> ok val=0.9665 test=0.9656 params=48138 steps=34602 ep=6.92 {"d": 64, "layers": 1, "lr": 0.00132, "mlp": 2, "max_len": 1024, "bs": 32, "stem": 8, "emb": 8, "mixer": "gru", "pos": "none", "expand": 1.0, "tau_max": 256.0}
+[  4927s] pathfinder attn         seed=2 frac=0.1 budget=1200.0 -> ok val=0.849 test=0.8416 params=55922 steps=29980 ep=59.96 {"d": 48, "layers": 1, "lr": 0.00108, "mlp": 2, "max_len": 1024, "bs": 32, "stem": 8, "mixer": "attn", "pos": "learned", "heads": 4}
+[  4938s] pathfinder gru          seed=2 frac=0.1 budget=1200.0 -> ok val=0.907 test=0.9034 params=48138 steps=35873 ep=71.746 {"d": 64, "layers": 1, "lr": 0.00132, "mlp": 2, "max_len": 1024, "bs": 32, "stem": 8, "emb": 8, "mixer": "gru", "pos": "none", "expand": 1.0, "tau_max": 256.0}
+[  6145s] imdb       gru          seed=2 frac=1.0 budget=1200.0 -> ok val=0.673 test=0.6522 params=115730 steps=17129 ep=27.406 {"d": 64, "layers": 1, "lr": 0.00132, "mlp": 2, "max_len": 4096, "bs": 32, "stem": 4, "emb": 16, "mixer": "gru", "pos": "learned", "expand": 1.0, "tau_max": 64.0}
+[  6149s] imdb       attn         seed=2 frac=1.0 budget=1200.0 -> ok val=0.667 test=0.664 params=107282 steps=10320 ep=16.512 {"d": 64, "layers": 1, "lr": 0.00132, "mlp": 2, "max_len": 4096, "bs": 32, "stem": 4, "emb": 16, "mixer": "attn", "pos": "learned", "heads": 4}
+[  6158s] imdb       attn         seed=2 frac=0.1 budget=1200.0 -> ok val=0.546 test=0.5674 params=107282 steps=10539 ep=167.288 {"d": 64, "layers": 1, "lr": 0.00132, "mlp": 2, "max_len": 4096, "bs": 32, "stem": 4, "emb": 16, "mixer": "attn", "pos": "learned", "heads": 4}
+[  6165s] imdb       gru          seed=2 frac=0.1 budget=1200.0 -> ok val=0.5715 test=0.5732 params=115730 steps=17194 ep=272.928 {"d": 64, "layers": 1, "lr": 0.00132, "mlp": 2, "max_len": 4096, "bs": 32, "stem": 4, "emb": 16, "mixer": "gru", "pos": "learned", "expand": 1.0, "tau_max": 64.0}
+
+=== bench: budget 1200 CPU-s per run, seeds [0, 1, 2], param cap 1000000 ===
+task       metric    |          baseline |         candidate | verdict | base 1/10 cand 1/10 |  drop b  drop c | cand@half    B | params b/c
+--------------------------------------------------------------------------------------------------------------------------------------------
+text       bits/byte |   1.2215 ±0.0016 |   1.0894 ±0.0017 | WIN     |    1.2649    1.1599 |  0.0433  0.0706 |                | 173824/233440
+cifar10    acc       |   0.7485 ±0.0043 |   0.7463 ±0.0018 | tie     |    0.5264    0.5697 |  0.2221  0.1766 |                | 94858/29578
+listops    acc       |   0.2938 ±0.0009 |   0.2908 ±0.0025 | tie     |    0.2875    0.2915 |  0.0063 -0.0007 |                | 395722/452170
+pathfinder acc       |   0.9437 ±0.0032 |   0.9699 ±0.0023 | WIN     |    0.8496    0.9093 |  0.0941  0.0606 |                | 55922/48138
+imdb       acc       |   0.6593 ±0.0088 |   0.6529 ±0.0008 | tie     |    0.5605    0.5772 |  0.0988  0.0757 |                | 107282/115730
+
+A  wins on a majority of tasks at equal budget : 2/5 wins, 3 ties -> FAIL
+C  smaller drop than baseline at 1/10 data on a majority of tasks : 4/5 -> PASS
+
+VERDICT: NOT YET
