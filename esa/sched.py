@@ -5,7 +5,9 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 def job_key(job):
-    return json.dumps({k: job[k] for k in ('task', 'model', 'cfg', 'seed', 'frac', 'budget')}, sort_keys=True)
+    d = {k: job[k] for k in ('task', 'model', 'cfg', 'seed', 'frac')}
+    d['budget'] = float(job['budget'])  # 1200 and 1200.0 are the same job
+    return json.dumps(d, sort_keys=True)
 
 
 def load_log(path):

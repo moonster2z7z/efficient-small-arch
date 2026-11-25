@@ -1,0 +1,22 @@
+[  1209s] cifar10    gru          seed=1 frac=0.1 budget=1200 -> ok val=0.59 test=0.5848 params=91018 steps=29607 ep=417.0 {"d": 64, "layers": 1, "lr": 0.00244, "mlp": 4, "patch": 4, "bs": 64, "mixer": "gru", "pos": "learned", "expand": 2.0, "tau_max": 256.0}
+[  1211s] cifar10    gru          seed=1 frac=1.0 budget=1200 -> ok val=0.7715 test=0.7702 params=91018 steps=29621 ep=42.075 {"d": 64, "layers": 1, "lr": 0.00244, "mlp": 4, "patch": 4, "bs": 64, "mixer": "gru", "pos": "learned", "expand": 2.0, "tau_max": 256.0}
+[  1247s] imdb       gru          seed=1 frac=0.1 budget=1200 -> ok val=0.539 test=0.549 params=448650 steps=6200 ep=98.408 {"d": 96, "layers": 3, "lr": 0.00149, "mlp": 4, "max_len": 4096, "bs": 32, "stem": 8, "emb": 8, "mixer": "gru", "pos": "learned", "expand": 1.0, "tau_max": 256.0}
+[  1248s] imdb       gru          seed=1 frac=1.0 budget=1200 -> ok val=0.6675 test=0.6636 params=448650 steps=6305 ep=10.088 {"d": 96, "layers": 3, "lr": 0.00149, "mlp": 4, "max_len": 4096, "bs": 32, "stem": 8, "emb": 8, "mixer": "gru", "pos": "learned", "expand": 1.0, "tau_max": 256.0}
+[  2418s] cifar10    gru          seed=2 frac=1.0 budget=1200 -> ok val=0.773 test=0.7602 params=91018 steps=28634 ep=40.673 {"d": 64, "layers": 1, "lr": 0.00244, "mlp": 4, "patch": 4, "bs": 64, "mixer": "gru", "pos": "learned", "expand": 2.0, "tau_max": 256.0}
+[  2423s] cifar10    gru          seed=2 frac=0.1 budget=1200 -> ok val=0.6005 test=0.5954 params=91018 steps=28984 ep=408.228 {"d": 64, "layers": 1, "lr": 0.00244, "mlp": 4, "patch": 4, "bs": 64, "mixer": "gru", "pos": "learned", "expand": 2.0, "tau_max": 256.0}
+[  2495s] imdb       gru          seed=2 frac=1.0 budget=1200 -> ok val=0.6745 test=0.6644 params=448650 steps=6190 ep=9.904 {"d": 96, "layers": 3, "lr": 0.00149, "mlp": 4, "max_len": 4096, "bs": 32, "stem": 8, "emb": 8, "mixer": "gru", "pos": "learned", "expand": 1.0, "tau_max": 256.0}
+[  2496s] imdb       gru          seed=2 frac=0.1 budget=1200 -> ok val=0.5575 test=0.5602 params=448650 steps=6392 ep=101.456 {"d": 96, "layers": 3, "lr": 0.00149, "mlp": 4, "max_len": 4096, "bs": 32, "stem": 8, "emb": 8, "mixer": "gru", "pos": "learned", "expand": 1.0, "tau_max": 256.0}
+
+=== bench: budget 1200 CPU-s per run, seeds [0, 1, 2], param cap 1000000 ===
+task       metric    |          baseline |         candidate | verdict | base 1/10 cand 1/10 |  drop b  drop c | cand@half    B | params b/c
+--------------------------------------------------------------------------------------------------------------------------------------------
+text       bits/byte |   1.2215 ±0.0016 |   1.0894 ±0.0017 | WIN     |    1.2649    1.1599 |  0.0433  0.0706 |                | 173824/233440
+cifar10    acc       |   0.7485 ±0.0043 |   0.7639 ±0.0032 | WIN     |    0.5264    0.5861 |  0.2221  0.1778 |                | 94858/91018
+listops    acc       |   0.2938 ±0.0009 |   0.2908 ±0.0025 | tie     |    0.2875    0.2915 |  0.0063 -0.0007 |                | 395722/452170
+pathfinder acc       |   0.9437 ±0.0032 |   0.9699 ±0.0023 | WIN     |    0.8496    0.9093 |  0.0941  0.0606 |                | 55922/48138
+imdb       acc       |   0.6593 ±0.0088 |   0.6611 ±0.0029 | tie     |    0.5605    0.5588 |  0.0988  0.1023 |                | 107282/448650
+
+A  wins on a majority of tasks at equal budget : 3/5 wins, 2 ties -> PASS
+C  smaller drop than baseline at 1/10 data on a majority of tasks : 3/5 -> PASS
+
+VERDICT: SUCCESS

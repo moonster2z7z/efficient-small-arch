@@ -1,0 +1,200 @@
+{
+ "budget": 1200,
+ "param_cap": 1000000,
+ "note": "chosen by validation score from logs/tune_B300.jsonl: 16 paired trials each (baseline attn; candidate gated recurrence, trials 0-7 plain gru, 8-15 with time-cell gate init); cifar10 and imdb candidate re-chosen by validation at B=1200 (logs/tune_B1200.jsonl, 5 paired trials + the B=300 config for each side; baseline kept its B=300 config because it scored best on validation)",
+ "tasks": {
+  "cifar10": {
+   "baseline": {
+    "model": "attn",
+    "cfg": {
+     "d": 48,
+     "layers": 3,
+     "lr": 0.00109,
+     "mlp": 4,
+     "patch": 8,
+     "bs": 64,
+     "mixer": "attn",
+     "pos": "learned",
+     "heads": 4
+    },
+    "tune_trial": 13,
+    "tune_val": 0.663,
+    "params": 94858
+   },
+   "candidate": {
+    "model": "gru",
+    "cfg": {
+     "d": 64,
+     "layers": 1,
+     "lr": 0.00244,
+     "mlp": 4,
+     "patch": 4,
+     "bs": 64,
+     "mixer": "gru",
+     "pos": "learned",
+     "expand": 2.0,
+     "tau_max": 256.0
+    },
+    "tune_trial": 8,
+    "tune_val": 0.7695,
+    "params": 91018
+   }
+  },
+  "imdb": {
+   "baseline": {
+    "model": "attn",
+    "cfg": {
+     "d": 64,
+     "layers": 1,
+     "lr": 0.00132,
+     "mlp": 2,
+     "max_len": 4096,
+     "bs": 32,
+     "stem": 4,
+     "emb": 16,
+     "mixer": "attn",
+     "pos": "learned",
+     "heads": 4
+    },
+    "tune_trial": 10,
+    "tune_val": 0.664,
+    "params": 107282
+   },
+   "candidate": {
+    "model": "gru",
+    "cfg": {
+     "d": 96,
+     "layers": 3,
+     "lr": 0.00149,
+     "mlp": 4,
+     "max_len": 4096,
+     "bs": 32,
+     "stem": 8,
+     "emb": 8,
+     "mixer": "gru",
+     "pos": "learned",
+     "expand": 1.0,
+     "tau_max": 256.0
+    },
+    "tune_trial": 12,
+    "tune_val": 0.681,
+    "params": 448650
+   }
+  },
+  "listops": {
+   "baseline": {
+    "model": "attn",
+    "cfg": {
+     "d": 96,
+     "layers": 3,
+     "lr": 0.00107,
+     "mlp": 4,
+     "max_len": 900,
+     "bs": 32,
+     "stem": 4,
+     "mixer": "attn",
+     "pos": "learned",
+     "heads": 4
+    },
+    "tune_trial": 4,
+    "tune_val": 0.308,
+    "params": 460522
+   },
+   "candidate": {
+    "model": "gru",
+    "cfg": {
+     "d": 96,
+     "layers": 3,
+     "lr": 0.00107,
+     "mlp": 4,
+     "max_len": 900,
+     "bs": 32,
+     "stem": 4,
+     "mixer": "gru",
+     "pos": "learned",
+     "expand": 1.0
+    },
+    "tune_trial": 4,
+    "tune_val": 0.307,
+    "params": 516970
+   }
+  },
+  "pathfinder": {
+   "baseline": {
+    "model": "attn",
+    "cfg": {
+     "d": 48,
+     "layers": 1,
+     "lr": 0.00108,
+     "mlp": 2,
+     "max_len": 1024,
+     "bs": 32,
+     "stem": 8,
+     "mixer": "attn",
+     "pos": "learned",
+     "heads": 4
+    },
+    "tune_trial": 6,
+    "tune_val": 0.913,
+    "params": 98930
+   },
+   "candidate": {
+    "model": "gru",
+    "cfg": {
+     "d": 64,
+     "layers": 1,
+     "lr": 0.00132,
+     "mlp": 2,
+     "max_len": 1024,
+     "bs": 32,
+     "stem": 8,
+     "emb": 8,
+     "mixer": "gru",
+     "pos": "none",
+     "expand": 1.0,
+     "tau_max": 256.0
+    },
+    "tune_trial": 15,
+    "tune_val": 0.9225,
+    "params": 48138
+   }
+  },
+  "text": {
+   "baseline": {
+    "model": "attn",
+    "cfg": {
+     "d": 96,
+     "layers": 2,
+     "lr": 0.00263,
+     "mlp": 2,
+     "ctx": 128,
+     "bs": 32,
+     "mixer": "attn",
+     "pos": "rope",
+     "heads": 4
+    },
+    "tune_trial": 15,
+    "tune_val": 1.33666,
+    "params": 173824
+   },
+   "candidate": {
+    "model": "gru",
+    "cfg": {
+     "d": 96,
+     "layers": 3,
+     "lr": 0.00352,
+     "mlp": 2,
+     "ctx": 128,
+     "bs": 64,
+     "mixer": "gru",
+     "pos": "learned",
+     "expand": 1.0,
+     "tau_max": 256.0
+    },
+    "tune_trial": 8,
+    "tune_val": 1.22923,
+    "params": 233440
+   }
+  }
+ }
+}
